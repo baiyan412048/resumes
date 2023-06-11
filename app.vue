@@ -3,7 +3,7 @@ const works = reactive([
   {
     title: '蒔栽',
     type: '線上購物網站',
-    dep: '從後端到前端都由我獨立製作的小型電商網站。<br />後端使用了Express.js 搭配 Mongodb，並串接了 imgur 用為圖片儲存，前端則使用 Nuxt.js 搭配 pinia，並試著使用 Nuxt 的 useCookie() 將購物車及登入紀錄持久化，金流嘗試串接 Line pay ( sandbox )。<br />功能包含註冊會員、購物車、結帳、查看訂單 ...等。',
+    dep: '從後端到前端都由我獨立製作的小型電商網站。<br />後端使用了Express.js 搭配 Mongodb，並串接了 imgur 用為圖片儲存，前端則使用 Nuxt.js 搭配 pinia，並試著使用 Nuxt 的 useCookie() 將購物車及登入紀錄持久化，金流則嘗試串接 Line pay ( sandbox )。<br />功能包含註冊會員、購物車、結帳、查看訂單 ...等。',
     src: '/web_gif_01.gif',
     links: [
       {
@@ -19,7 +19,7 @@ const works = reactive([
   {
     title: '久勝旗幟',
     type: '線上購物網站',
-    dep: '',
+    dep: '此專案的特殊需求為線上客製旗幟樣式。<br />我使用 Fabric.js 做為基底打造線上客製的功能，使用者完成客製後，會將 canvas 轉換為 png 再 POST 給後端紀錄。<br />使用者的操作也需記錄下來，在購物車的地方可再次回到產品做編輯。',
     src: '/web_gif_02.gif',
     links: [
       {
@@ -31,7 +31,7 @@ const works = reactive([
   {
     title: '元太科技 ESG',
     type: '形象網站',
-    dep: '',
+    dep: '基本的形象網站，較著重在物件的進場效果及互動效果。',
     src: '/web_capture_03.jpeg',
     links: [
       {
@@ -43,7 +43,7 @@ const works = reactive([
   {
     title: '元太科技形象網站',
     type: '形象網站',
-    dep: '',
+    dep: '投資人專區有大量的表格，有特別寫了 CSS 樣板方便切版執行，以及針對不同的表格製作不同的 RWD 樣式',
     src: '/web_capture_04.jpeg',
     links: [
       {
@@ -55,7 +55,7 @@ const works = reactive([
   {
     title: '元太科技購物網站',
     type: '線上購物網站',
-    dep: '',
+    dep: '元太科技三個專案剛好都由我負責，部分的樣式皆有沿用，在前期就已經規劃好共用樣板的製作，加速完成網站切版。',
     src: '/web_gif_05.gif',
     links: [
       {
@@ -97,7 +97,7 @@ const works = reactive([
           <p class="text">
             我是 陳聖元 / Eric chen<br /><br />
             商業設計系畢業後就馬上進入美編的工作，在工作的過程中接觸到網頁相關的領域後，就對網頁產生了興趣，便投入於學習中。<br /><br />
-            後來很幸運的進入了威德數位設計擔任前端工程師，累積了很多的作品及經驗，在與團隊的合作之下，產出不少形象及購物網站，也寫了各種小工具致力於加速製作網站的速度，後期也幫助新進人員能快速的適應工作環境及解決初期遇到的問題。<br /><br />
+            後來很幸運的進入了威德數位設計擔任前端工程師，累積了很多的作品及經驗，在與團隊的合作之下，產出不少形象及購物網站，也寫了各種小工具致力於加速製作網站的速度，後期也協助新進人員能快速的適應工作環境及解決初期遇到的問題。<br /><br />
             <span><Icon name="ri:road-map-line" />　台灣 · 台中市</span>
             <br />
             <span>
@@ -137,7 +137,7 @@ const works = reactive([
           </div>
           <div class="group">
             <p class="title">Back-end</p>
-            <p class="dep">獨立設計後端欄位，並制定 API 路由</p>
+            <p class="dep">獨立設計資料庫欄位，並制定 API 路由</p>
             <ul>
               <li>Node.js</li>
               <li>Express.js</li>
@@ -204,10 +204,6 @@ const works = reactive([
     </div>
     <div class="footer">
       <div class="wrapper">
-        <div class="corner">
-          <span></span>
-          <span></span>
-        </div>
         <div class="container">
           <a href="https://github.com/baiyan412048">site by baiyan412048</a>
         </div>
@@ -451,6 +447,7 @@ body
     gap: 20px
 
 .footer
+  margin-top: 20px
   font-size: px(14)
   text-align: center
   .wrapper
