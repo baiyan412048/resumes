@@ -93,7 +93,9 @@ const anchorFollow = () => {
 // 錨點點擊事件
 const anchorMethod = (target) => {
   window.scrollTo({
-    top: document.querySelector(`[anchor-target="${target}"]`).offsetTop - 20,
+    top:
+      document.querySelector(`[anchor-target="${target}"]`).offsetTop -
+      window.innerHeight / 3,
     behavior: 'smooth'
   })
 }
@@ -367,12 +369,15 @@ body
   font-family: $sans
   font-weight: 500
   line-height: 1.6
+  +rwdmax(767)
+    padding: 10px
 
 .elevator
   padding: 10px
   position: fixed
   bottom: 10px
   right: 10px
+  z-index: 10
   border-radius: 10px
   background-color: rgba(#fff, .5)
   backdrop-filter: blur(1px)
@@ -439,6 +444,9 @@ body
         right: 0
         &::before
           border-radius: 0 0 500px 0
+  +rwdmax(767)
+    .wrapper
+      padding: 20px
 
 .heading
   &.active
@@ -477,6 +485,18 @@ body
       content: ''
     span
       opacity: 0
+  +rwdmax(767)
+    &.active
+      .title
+        &::before
+          max-width: 260px
+    .date
+      font-size: px(18)
+      letter-spacing: 5px
+    .title
+      font-size: px(60)
+      &::before
+        height: 20px
 
 .intro
   &.active
@@ -489,6 +509,7 @@ body
       transition: opacity .4s
   .container
     display: flex
+    align-items: flex-start
     gap: 40px
   .shot
     position: relative
@@ -550,6 +571,16 @@ body
     opacity: 0
     span
       font-size: px(14)
+  +rwdmax(767)
+    .container
+      display: block
+    .shot
+      margin-bottom: 20px
+      margin-right: 20px
+      float: left
+      max-width: 160px
+    .text
+      font-size: px(14)
 
 .skill
   &.active
@@ -591,6 +622,15 @@ body
       width: 4px
       height: 4px
       content: ''
+  +rwdmax(767)
+    .container
+      flex-direction: column
+    .group
+      width: 100%
+    .title
+      font-size: px(18)
+    ul
+      font-size: px(14)
 
 .works
   &.active
@@ -731,6 +771,9 @@ body
     margin-top: 20px
     display: flex
     gap: 20px
+  +rwdmax(767)
+    li
+      width: 100%
 
 .footer
   margin-top: 20px
@@ -751,4 +794,7 @@ body
     display: inline-block
     font-size: px(20)
     cursor: pointer
+  +rwdmax(767)
+    .wrapper
+      padding: 10px 40px 40px 40px
 </style>
