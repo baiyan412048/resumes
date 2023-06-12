@@ -65,12 +65,139 @@ const works = reactive([
     ]
   }
 ])
+
+// 錨點判斷區間陣列
+const anchorPoints = reactive([])
+// 錨點判斷區間事件
+const anchorFollow = () => {
+  const scrollTop = window.scrollY
+
+  // 由底開始判斷
+  // Array.some() return true 中斷
+  anchorPoints.reverse().some(({ target, start, end }) => {
+    if (scrollTop >= start && scrollTop <= end) {
+      const $control = document.querySelectorAll('[anchor-control]')
+      const name = target.getAttribute('anchor-target')
+
+      $control.forEach((el) => el.classList.remove('active'))
+      $control.forEach((el) => {
+        if (el.getAttribute('anchor-control') == name) {
+          el.classList.add('active')
+        }
+      })
+      return true
+    }
+  })
+}
+
+// 錨點點擊事件
+const anchorMethod = (target) => {
+  window.scrollTo({
+    top: document.querySelector(`[anchor-target="${target}"]`).offsetTop - 20,
+    behavior: 'smooth'
+  })
+}
+
+// 作品 Emoji 動畫
+// Emoji Array
+const emojis = reactive(['👻', '👺', '💀', '😍', '🧠', '👅', '🥳', '😻', '💯'])
+// Emoji fonts size
+const fonts = reactive(['30px', '32px', '34px', '36px', '38px', '40px'])
+// Emoji mouseenter
+const worksEmojiEnter = ($event) => {
+  const $target = $event.target
+  // 加入結構
+  $target.insertAdjacentHTML(
+    'beforeEnd',
+    `<div class='emoji'><span>${
+      emojis[(Math.random() * emojis.length) | 0]
+    }</span></div>`
+  )
+  // top
+  $target.querySelector('.emoji').style.top = `${
+    ((Math.random() * $target.offsetHeight) | 0) + 1
+  }px`
+  // left
+  $target.querySelector('.emoji').style.left = `${
+    ((Math.random() * $target.offsetWidth) | 0) + 1
+  }px`
+  // font size
+  $target.querySelector('.emoji').style.fontSize =
+    fonts[(Math.random() * fonts.length) | 0]
+  // opacity
+  $target.querySelector('.emoji').style.opacity = 1
+  // transform
+  $target.querySelector('.emoji').style.transform = `rotate(${
+    ((Math.random() * (10 + 10)) | 0) - 10
+  }deg)`
+}
+// Emoji mouseleave
+const worksEmojiLeave = ($event) => {
+  $event.target.querySelector('.emoji').remove()
+}
+
+// go top
+const goTop = () => {
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth'
+  })
+}
+
+onBeforeMount(() => {
+  window.removeEventListener('scroll', anchorFollow)
+})
+
+onMounted(() => {
+  // 計算判斷區間
+  anchorPoints.push(
+    ...[...document.querySelectorAll('[anchor-target]')].map((el) => {
+      return {
+        target: el,
+        start: el.offsetTop - window.innerHeight / 2,
+        end: el.offsetTop + el.offsetHeight - window.innerHeight / 2
+      }
+    })
+  )
+
+  // 初始樣式
+  anchorFollow()
+  // 綁定卷軸事件
+  window.addEventListener('scroll', anchorFollow)
+
+  // 進場動畫
+  const callback = (entries) => {
+    entries.forEach((entry) => {
+      const { target, isIntersecting } = entry
+      if (isIntersecting) {
+        target.classList.add('active')
+      }
+    })
+  }
+  const observer = new IntersectionObserver(callback, {
+    threshold: 0.1
+  })
+  document.querySelectorAll('[observer]').forEach((el) => {
+    observer.observe(el)
+  })
+})
+
+useHead({
+  title: 'RESUMES | Baiyan777'
+})
 </script>
 
 <template>
   <div class="background"></div>
+  <div class="elevator">
+    <ul>
+      <li anchor-control="intro" @click="anchorMethod('intro')">簡介</li>
+      <li anchor-control="skill" @click="anchorMethod('skill')">技術</li>
+      <li anchor-control="works" @click="anchorMethod('works')">作品</li>
+    </ul>
+  </div>
   <div class="outer">
-    <div class="heading">
+    <div class="heading" observer>
       <div class="wrapper">
         <div class="corner">
           <span></span>
@@ -79,10 +206,12 @@ const works = reactive([
           <span></span>
         </div>
         <p class="date">2023 / 06 / 11</p>
-        <h1 class="title">RESUMES</h1>
+        <h1 class="title">
+          <span>RESUMES</span>
+        </h1>
       </div>
     </div>
-    <div class="intro">
+    <div class="intro" observer anchor-target="intro">
       <div class="wrapper">
         <div class="corner">
           <span></span>
@@ -93,6 +222,10 @@ const works = reactive([
         <div class="container">
           <div class="shot">
             <img src="/pic.jpg" loading="lazy" alt="" />
+            <div class="emoji">
+              <span class="👍">👍</span>
+              <span class="☀️">☀️</span>
+            </div>
           </div>
           <p class="text">
             我是 陳聖元 / Eric chen<br /><br />
@@ -101,7 +234,7 @@ const works = reactive([
             <span><Icon name="ri:road-map-line" />　台灣 · 台中市</span>
             <br />
             <span>
-              <a href="baiyanchen0214@gmail.com">
+              <a href="mailto:baiyanchen0214@gmail.com">
                 <Icon name="ri:mail-line" />　baiyanchen0214@gmail.com</a
               >
             </span>
@@ -111,7 +244,7 @@ const works = reactive([
         </div>
       </div>
     </div>
-    <div class="skill">
+    <div class="skill" observer anchor-target="skill">
       <div class="wrapper">
         <div class="corner">
           <span></span>
@@ -156,7 +289,7 @@ const works = reactive([
         </div>
       </div>
     </div>
-    <div class="works">
+    <div class="works" observer anchor-target="works">
       <div class="wrapper">
         <div class="corner">
           <span></span>
@@ -179,7 +312,13 @@ const works = reactive([
                   {{ item.title }}
                 </a>
               </p>
-              <a class="photo" :href="item.links[0].link" target="_blank">
+              <a
+                class="photo"
+                :href="item.links[0].link"
+                target="_blank"
+                @mouseenter="worksEmojiEnter"
+                @mouseleave="worksEmojiLeave"
+              >
                 <img :src="item.src" loading="lazy" alt="" />
               </a>
               <div class="content">
@@ -205,6 +344,9 @@ const works = reactive([
     <div class="footer">
       <div class="wrapper">
         <div class="container">
+          <div class="to-top" @click="goTop">
+            <Icon name="ri:arrow-up-line" />
+          </div>
           <a href="https://github.com/baiyan412048">site by baiyan412048</a>
         </div>
       </div>
@@ -226,11 +368,31 @@ body
   font-weight: 500
   line-height: 1.6
 
+.elevator
+  padding: 10px
+  position: fixed
+  bottom: 10px
+  right: 10px
+  border-radius: 10px
+  background-color: rgba(#fff, .5)
+  backdrop-filter: blur(1px)
+  li
+    padding: 10px 20px
+    border-radius: 10px
+    font-size: px(14)
+    cursor: pointer
+    transition: background .2s
+    &:not(:last-child)
+      margin-bottom: 10px
+    +hover
+      background-color: rgba($yellow, .8)
+    &.active
+      background-color: rgba($yellow, .8)
+
 .outer
   margin: 0 auto
   max-width: 960px
   width: 100%
-
   .wrapper
     padding: 40px
     position: relative
@@ -279,6 +441,14 @@ body
           border-radius: 0 0 500px 0
 
 .heading
+  &.active
+    .title
+      &::before
+        max-width: 400px
+        transition: max-width 1s .2s cubic-bezier(0.22, 1, 0.36, 1)
+      span
+        opacity: 1
+        transition: opacity .4s
   .date
     margin-bottom: 10px
     font-size: px(20)
@@ -301,50 +471,107 @@ body
       z-index: -1
       display: block
       background-color: $yellow
-      max-width: 400px
+      max-width: 0
       width: 100%
       height: 30px
       content: ''
+    span
+      opacity: 0
 
 .intro
+  &.active
+    .shot
+      &::before
+        opacity: .15
+        transition: opacity .4s
+    .text
+      opacity: 1
+      transition: opacity .4s
   .container
     display: flex
     gap: 40px
   .shot
     position: relative
     flex-shrink: 0
+    border: 4px solid $yellow
+    border-radius: 15px
     aspect-ratio: 200 / 250
     max-width: 220px
     width: 100%
+    +hover
+      .emoji
+        .👍
+          opacity: 1
+          transform: rotate(-15deg) translateZ(0)
+        .☀️
+          opacity: 1
+          transform: translateZ(0)
     &::before
       position: absolute
       top: 0
       left: 0
+      z-index: 1
       display: block
-      border-radius: 15px
       background-color: $yellow
       width: 100%
       height: 100%
-      opacity: .15
       content: ''
     img
       border-radius: 10px
-      border: 4px solid $yellow
       display: block
       width: 100%
       height: 100%
       object-fit: cover
-  span
-    font-size: px(14)
+  .emoji
+    position: absolute
+    top: 0
+    left: 0
+    z-index: 2
+    width: 100%
+    height: 100%
+    font-family: emoji
+    .👍
+      position: absolute
+      bottom: 5%
+      left: -10%
+      transform: rotate(15deg) translate3d(15px, 15px, 0)
+      font-size: px(38)
+      opacity: 0
+      transition: opacity .4s, transform .4s
+    .☀️
+      position: absolute
+      top: 5%
+      right: -7%
+      font-size: px(32)
+      transform: translate3d(10px, -10px, 0)
+      opacity: 0
+      transition: opacity .4s, transform .4s
+  .text
+    opacity: 0
+    span
+      font-size: px(14)
 
 .skill
+  &.active
+    .group
+      opacity: 1
+      transform: translateZ(0)
+      transition: opacity .6s, transform .6s
+      &:nth-child(2)
+        transition-delay: .2s
+      &:nth-child(3)
+        transition-delay: .4s
   .container
     display: flex
     gap: 20px
   .group
-    flex: 1
-    width: 100%
+    opacity: 0
+    transform: translate3d(0, 10px, 0)
+    width: calc((100% - 40px) / 3)
   .title
+    padding: 0 10px
+    display: inline-block
+    background-color: rgba($yellow, .5)
     font-size: px(20)
     font-family: $serif
     font-weight: 700
@@ -366,6 +593,33 @@ body
       content: ''
 
 .works
+  &.active
+    .tip
+      span
+        &::before
+          transform: translate3d(-15px, -5px, 0) scale(1)
+          transition: transform .8s
+    .head
+      &::before
+        width: 100%
+        transition: width .6s .4s
+      .type
+        &::after
+          height: 100%
+          transition: height .6s .2s
+    .title,
+    .photo,
+    .content
+      opacity: 1
+      transform: translateZ(0)
+      transition: opacity .8s, transform .8s
+    .title
+      transition-delay: .6s
+    .photo
+      transition-delay: .7s
+    .content
+      transition-delay: .8s
+
   .tip
     margin-bottom: 30px
     font-size: px(24)
@@ -379,7 +633,7 @@ body
         position: absolute
         top: 0
         left: 0
-        transform: translate3d(-15px, -5px, 0)
+        transform: translate3d(-15px, -5px, 0) scale(0)
         z-index: -1
         display: block
         border-radius: 500px
@@ -402,14 +656,33 @@ body
   .head
     margin-bottom: 20px
     padding: 10px 0
+    position: relative
     display: flex
     align-items: center
-    border-bottom: 1px solid rgba($black, .5)
+    &::before
+      position: absolute
+      bottom: 0
+      left: 0
+      display: block
+      background-color: rgba($black, .5)
+      width: 0
+      height: 1px
+      content: ''
     span
       width: 50%
     .type
-      border-right: 1px solid rgba($black, .5)
+      position: relative
+      // border-right: 1px solid rgba($black, .5)
       text-align: center
+      &::after
+        position: absolute
+        top: 0
+        right: 0
+        display: block
+        background-color: rgba($black, .5)
+        width: 1px
+        height: 0
+        content: ''
     .index
       &::before
         display: block
@@ -423,12 +696,16 @@ body
     font-size: px(24)
     font-family: $serif
     text-align: center
+    opacity: 0
+    transform: translate3d(0, 10px, 0)
   .photo
     position: relative
     display: block
     flex-shrink: 0
     width: 100%
     aspect-ratio: 16 / 9
+    opacity: 0
+    transform: translate3d(0, 10px, 0)
     img
       display: block
       width: 100%
@@ -436,9 +713,18 @@ body
       border-radius: 10px
       object-fit: cover
       object-position: center top
+  .emoji
+    position: absolute
+    opacity: 0
+    transition: opacity .4s
+    span
+      display: block
+      transform: translate3d(-50%, -50%, 0)
   .content
     margin-top: 20px
     padding: 0 10px
+    opacity: 0
+    transform: translate3d(0, 10px, 0)
   .dep
     font-size: px(14)
   .links
@@ -451,8 +737,18 @@ body
   font-size: px(14)
   text-align: center
   .wrapper
+    padding-top: 10px
     background: url(./public/background_ground.png)
     background-size: cover
     background-repeat: no-repeat
     background-position: center 72%
+  .container
+    display: flex
+    align-items: center
+    justify-content: center
+    flex-direction: column
+  .to-top
+    display: inline-block
+    font-size: px(20)
+    cursor: pointer
 </style>
