@@ -43,7 +43,7 @@ const works = reactive([
   {
     title: '元太科技形象網站',
     type: '形象網站',
-    dep: '投資人專區有大量的表格，有特別寫了 CSS 樣板方便切版執行，以及針對不同的表格製作不同的 RWD 樣式',
+    dep: '投資人專區有大量的表格，有特別寫了 CSS 樣板方便切版執行，以及針對不同的表格製作不同的 RWD 樣式。',
     src: '/web_capture_04.jpeg',
     links: [
       {
@@ -272,7 +272,7 @@ useHead({
           </div>
           <div class="group">
             <p class="title">Back-end</p>
-            <p class="dep">獨立設計資料庫欄位，並制定 API 路由</p>
+            <p class="dep">獨立設計資料庫欄位，並制定 API 路由。</p>
             <ul>
               <li>Node.js</li>
               <li>Express.js</li>
