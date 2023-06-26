@@ -23,6 +23,7 @@
     "sass-loader": "^13.3.2"
   },
   "dependencies": {
+    "@nuxtjs/google-fonts": "^3.0.1",
     "nuxt-icon": "^0.4.1"
   }
 }
